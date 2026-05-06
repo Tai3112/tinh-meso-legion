@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công cụ Meso Pro</title>
+    <title>Công cụ Meso Pro - Background Auto</title>
     <link rel="icon" type="image/png" href="https://tainv.dak.edu.vn/vhoangstore/wp-content/uploads/2026/01/maybayicon1-150x150.png">
     
     <style>
         :root {
+            /* Chế độ Sáng */
             --bg-color: #f0f2f5;
-            --container-bg: white;
+            --bg-image: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Hình nền nhẹ cho chế độ sáng */
+            --container-bg: rgba(255, 255, 255, 0.95); /* Làm trong suốt nhẹ để thấy nền */
             --text-color: #444;
             --heading-color: #1a73e8;
             --input-border: #ddd;
@@ -19,81 +21,59 @@
         }
 
         [data-theme="dark"] {
+            /* Chế độ Tối */
             --bg-color: #18191a;
-            --container-bg: #242526;
+            --bg-image: url('https://www.transparenttextures.com/patterns/stardust.png'); /* Hình nền hạt bụi cho chế độ tối */
+            --container-bg: rgba(36, 37, 38, 0.95);
             --text-color: #e4e6eb;
             --heading-color: #45bdff;
             --input-border: #3e4042;
             --hr-color: #3e4042;
-            --btn-color: #1a73e8;
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             background-color: var(--bg-color); 
+            background-image: var(--bg-image); /* Áp dụng hình nền */
+            background-attachment: fixed;
             padding: 20px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             margin: 0;
             min-height: 100vh;
-            transition: background-color 0.3s ease;
+            transition: all 0.4s ease; /* Chuyển đổi mượt mà hơn */
             color: var(--text-color);
         }
 
+        /* Giữ nguyên các Style khác của bạn */
         .toolbar { display: flex; gap: 10px; margin-bottom: 20px; z-index: 100; }
-
         .btn-toggle {
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--heading-color);
-            background: var(--container-bg);
-            color: var(--heading-color);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
+            padding: 8px 15px; border-radius: 20px; border: 1px solid var(--heading-color);
+            background: var(--container-bg); color: var(--heading-color); cursor: pointer;
+            font-size: 14px; font-weight: bold; transition: 0.3s;
         }
         .btn-toggle:hover { background: var(--heading-color); color: white; }
 
         .container { 
-            background: var(--container-bg); 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-            width: 100%; 
-            max-width: 500px; 
-            margin-bottom: 20px; 
-            position: relative; 
-            z-index: 10;
+            background: var(--container-bg); padding: 25px; border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); width: 100%; max-width: 500px; 
+            margin-bottom: 20px; position: relative; z-index: 10;
+            backdrop-filter: blur(5px); /* Hiệu ứng mờ nền phía sau container */
         }
 
         h2 { color: var(--heading-color); border-bottom: 2px solid var(--hr-color); padding-bottom: 10px; margin-top: 0; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 8px; font-weight: bold; }
-        
         input { 
             width: 100%; padding: 12px; border: 1px solid var(--input-border); 
             border-radius: 6px; box-sizing: border-box; font-size: 15px;
             background: var(--container-bg); color: var(--text-color);
-            margin-bottom: 5px;
         }
-        
-        /* PHẦN SỬA LỖI NÚT BẤM TẠI ĐÂY */
         .btn-calc { 
-            display: block;
-            width: 100%; 
-            padding: 12px; 
-            background-color: var(--btn-color); 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 16px; 
-            transition: 0.3s;
-            margin-top: 10px;
-            text-align: center;
+            display: block; width: 100%; padding: 12px; background-color: var(--btn-color); 
+            color: white; border: none; border-radius: 6px; cursor: pointer; 
+            font-weight: bold; font-size: 16px; transition: 0.3s; margin-top: 10px;
         }
         .btn-calc:hover { background-color: var(--btn-hover); }
 
@@ -106,7 +86,7 @@
         #the-fly { position: fixed; top: 0; left: 0; width: 40px; height: 40px; background-image: url('https://tainv.dak.edu.vn/vhoangstore/wp-content/uploads/2026/01/maybayicon1-150x150.png'); background-size: contain; background-repeat: no-repeat; pointer-events: none; z-index: 9999; margin-left: -20px; margin-top: -20px; }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
     <div class="toolbar">
         <button class="btn-toggle" onclick="toggleFly()">✈️ Tắt/Bật Máy Bay</button>
@@ -116,9 +96,26 @@
     <div id="trail-container"></div>
     <div id="the-fly"></div>
 
-    
+    <div class="container">
+        <h2>Cách 2: Tổng Meso & Phút</h2>
+        <div class="form-group">
+            <label>Tổng số phút:</label>
+            <input type="text" id="tổng_phút" placeholder="Ví dụ: 240" oninput="updateHint(this, 'convert_hint')">
+            <small id="convert_hint"></small>
+        </div>
+        <div class="form-group">
+            <label>Rate Legion:</label>
+            <input type="text" id="rate_legion_2" placeholder="Ví dụ: 883,000,000" oninput="formatCurrency(this)">
+        </div>
+        <button class="btn-calc" onclick="tinhCach2()">Tính kết quả</button>
+        <div id="res2" class="result-area" style="display:none;">
+            <div class="result-item">Số giờ: <span id="hien_thi_gio" class="highlight">0</span></div>
+            <div class="result-item">Meso Legion: <span id="meso_legion" class="highlight">0</span></div>
+            <div class="result-item">Nhớ cộng <span id="hien_thi_gio_2" class="highlight">0</span> vào Task</div>
+        </div>
+    </div>
 
-
+    <hr>
 
     <div class="container">
         <h2>Cách 1: Chênh lệch Rate</h2>
@@ -133,33 +130,25 @@
         <div class="form-group">
             <label>Tổng số phút:</label>
             <input type="text" id="phut_1" oninput="updateHint(this, 'hint_1')">
-            <small id="hint_1" style="color: #888;"></small>
+            <small id="hint_1"></small>
         </div>
         <button class="btn-calc" onclick="tinhCach1()">Tính kết quả</button>
         <div id="res1" class="result-area" style="display:none;">
             <div class="result-item">Kết quả: <span id="ket_qua_1" class="highlight">0</span></div>
         </div>
     </div>
-        <hr>
-<div class="container">
-        <h2>Cách 2: Tổng Meso & Phút</h2>
-        <div class="form-group">
-            <label>Tổng số phút:</label>
-            <input type="text" id="tổng_phút" placeholder="Ví dụ: 240" oninput="updateHint(this, 'convert_hint')">
-            <small id="convert_hint" style="color: #888;"></small>
-        </div>
-        <div class="form-group">
-            <label>Rate Legion:</label>
-            <input type="text" id="rate_legion_2" placeholder="Ví dụ: 883,000,000" oninput="formatCurrency(this)">
-        </div>
-        <button class="btn-calc" onclick="tinhCach2()">Tính kết quả</button>
-        <div id="res2" class="result-area" style="display:none;">
-            <div class="result-item">Số giờ: <span id="hien_thi_gio" class="highlight">0</span></div>
-            <div class="result-item">Meso Legion: <span id="meso_legion" class="highlight">0</span></div>
-            <div class="result-item">Nhớ cộng <span id="hien_thi_gio_2" class="highlight">0</span> vào Task</div>
-        </div>
-    </div>
+
     <script>
+        // --- CHỨC NĂNG ĐỔI THEME & HÌNH NỀN ---
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            
+            // Bạn có thể thay đổi link hình nền trực tiếp tại đây nếu muốn nhiều hình khác nhau
+            // Ví dụ: if(newTheme === 'dark') { ... }
+        }
+
         let flyEnabled = true;
         function toggleFly() {
             flyEnabled = !flyEnabled;
@@ -167,11 +156,7 @@
             document.getElementById('trail-container').style.display = flyEnabled ? 'block' : 'none';
         }
 
-        function toggleTheme() {
-            const currentTheme = document.body.getAttribute('data-theme');
-            document.body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
-        }
-
+        // --- CÁC HÀM TÍNH TOÁN GIỮ NGUYÊN ---
         function formatCurrency(input) {
             let value = input.value.replace(/,/g, '');
             if (value === "") return;
@@ -179,19 +164,16 @@
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             input.value = parts.join('.');
         }
-
         function getRawNumber(id) {
             let val = document.getElementById(id).value;
             return parseFloat(val.replace(/,/g, '')) || 0;
         }
-
         function updateHint(input, hintId) {
             formatCurrency(input);
             const phut = parseFloat(input.value.replace(/,/g, '')) || 0;
             const gio = phut / 60;
             document.getElementById(hintId).innerText = phut > 0 ? " tương đương " + gio.toFixed(2) + " giờ" : "";
         }
-
         function tinhCach1() {
             const rL = getRawNumber('rate_legion_1');
             const rW = getRawNumber('rate_wap_1');
@@ -200,7 +182,6 @@
             document.getElementById('res1').style.display = 'block';
             document.getElementById('ket_qua_1').innerText = kq.toLocaleString('vi-VN');
         }
-
         function tinhCach2() {
             const tongPhut = getRawNumber('tổng_phút');
             const rL = getRawNumber('rate_legion_2');
@@ -212,51 +193,27 @@
             document.getElementById('hien_thi_gio_2').innerText = gio.toFixed(2);
         }
 
-        const speed = 0.08;
-        const trailLength = 20;
-        const fly = document.getElementById('the-fly');
-        const trailContainer = document.getElementById('trail-container');
-        let dots = [];
-        let history = [];
-
+        // --- HIỆU ỨNG RUỒI BAY ---
+        const speed = 0.08, trailLength = 20;
+        const fly = document.getElementById('the-fly'), trailContainer = document.getElementById('trail-container');
+        let dots = [], history = [], mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2, flyX = mouseX, flyY = mouseY;
         for (let i = 0; i < trailLength; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'trail-dot';
-            trailContainer.appendChild(dot);
-            dots.push(dot);
+            const dot = document.createElement('div'); dot.className = 'trail-dot';
+            trailContainer.appendChild(dot); dots.push(dot);
         }
-
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let flyX = mouseX;
-        let flyY = mouseY;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
         function animate() {
             if (flyEnabled) {
                 history.push({ x: flyX, y: flyY });
                 if (history.length > trailLength) history.shift();
-
-                let distX = mouseX - flyX;
-                let distY = mouseY - flyY;
-                flyX += distX * speed;
-                flyY += distY * speed;
-
-                const angle = Math.atan2(distY, distX);
-                const degree = angle * (180 / Math.PI);
-                fly.style.transform = `translate(${flyX}px, ${flyY}px) rotate(${degree + 90}deg)`;
-
+                flyX += (mouseX - flyX) * speed; flyY += (mouseY - flyY) * speed;
+                const angle = Math.atan2(mouseY - flyY, mouseX - flyX);
+                fly.style.transform = `translate(${flyX}px, ${flyY}px) rotate(${angle * (180 / Math.PI) + 90}deg)`;
                 for (let i = 0; i < dots.length; i++) {
                     const posIndex = history.length - 1 - i;
                     if (posIndex >= 0) {
-                        const pos = history[posIndex];
-                        dots[i].style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+                        dots[i].style.transform = `translate(${history[posIndex].x}px, ${history[posIndex].y}px) scale(${1 - (i / trailLength) * 0.5})`;
                         dots[i].style.opacity = 1 - (i / trailLength);
-                        dots[i].style.transform += ` scale(${1 - (i / trailLength) * 0.5})`;
                     }
                 }
             }

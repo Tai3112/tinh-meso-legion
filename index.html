@@ -95,29 +95,7 @@
 
     <div id="trail-container"></div>
     <div id="the-fly"></div>
-
-    <div class="container">
-        <h2>Cách 2: Tổng Meso & Phút</h2>
-        <div class="form-group">
-            <label>Tổng số phút:</label>
-            <input type="text" id="tổng_phút" placeholder="Ví dụ: 240" oninput="updateHint(this, 'convert_hint')">
-            <small id="convert_hint"></small>
-        </div>
-        <div class="form-group">
-            <label>Rate Legion:</label>
-            <input type="text" id="rate_legion_2" placeholder="Ví dụ: 883,000,000" oninput="formatCurrency(this)">
-        </div>
-        <button class="btn-calc" onclick="tinhCach2()">Tính kết quả</button>
-        <div id="res2" class="result-area" style="display:none;">
-            <div class="result-item">Số giờ: <span id="hien_thi_gio" class="highlight">0</span></div>
-            <div class="result-item">Meso Legion: <span id="meso_legion" class="highlight">0</span></div>
-            <div class="result-item">Nhớ cộng <span id="hien_thi_gio_2" class="highlight">0</span> vào Task</div>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="container">
+<div class="container">
         <h2>Cách 1: Chênh lệch Rate</h2>
         <div class="form-group">
             <label>Rate Legion:</label>
@@ -137,6 +115,29 @@
             <div class="result-item">Kết quả: <span id="ket_qua_1" class="highlight">0</span></div>
         </div>
     </div>
+     <hr>
+    <div class="container">
+        <h2>Cách 2: Tổng Meso & Phút</h2>
+        <div class="form-group">
+            <label>Tổng số phút:</label>
+            <input type="text" id="tổng_phút" placeholder="Ví dụ: 240" oninput="updateHint(this, 'convert_hint')">
+            <small id="convert_hint"></small>
+        </div>
+        <div class="form-group">
+            <label>Rate Legion:</label>
+            <input type="text" id="rate_legion_2" placeholder="Ví dụ: 883,000,000" oninput="formatCurrency(this)">
+        </div>
+        <button class="btn-calc" onclick="tinhCach2()">Tính kết quả</button>
+        <div id="res2" class="result-area" style="display:none;">
+            <div class="result-item">Số giờ: <span id="hien_thi_gio" class="highlight">0</span></div>
+            <div class="result-item">Meso Legion: <span id="meso_legion" class="highlight">0</span></div>
+            <div class="result-item">Nhớ cộng <span id="hien_thi_gio_2" class="highlight">0</span> vào Task</div>
+        </div>
+    </div>
+
+   
+
+    
 
     <script>
         // --- CHỨC NĂNG ĐỔI THEME & HÌNH NỀN ---

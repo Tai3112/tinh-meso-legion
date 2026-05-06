@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ tính toán Meso</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin-bottom: 20px; }
+        h2 { color: #1a73e8; border-bottom: 2px solid #e8f0fe; padding-bottom: 10px; margin-top: 0; }
+        h3 { color: #5f6368; font-size: 0.9em; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        input:focus { border-color: #1a73e8; outline: none; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-calc { background-color: #1a73e8; color: white; }
+        .btn-calc:hover { background-color: #1557b0; }
+        .result-area { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 5px solid #34a853; }
+        .result-item { margin-bottom: 10px; font-size: 1.05em; }
+        .highlight { color: #d93025; font-weight: bold; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 30px 0; width: 100%; max-width: 500px; }
+    </style>
+</head>
+<body>
+<!-- CÁCH TÍNH 1: Chênh lệch Rate -->
+<div class="container">
+    <h2>Cách 1: Chênh lệch Rate</h2>
+    <h3>Công thức: (Legion - Wap) x (Phút / 60)</h3>
+    <div class="form-group">
+        <label>Rate Legion:</label>
+        <input type="text" id="rate_legion_1"  oninput="formatCurrency(this)">
+    </div>
+    <div class="form-group">
+        <label>Rate Wap:</label>
+        <input type="text" id="rate_wap_1"  oninput="formatCurrency(this)">
+    </div>
+    <div class="form-group">
+    <label>Tổng số phút:</label>
+    <!-- Thêm oninput để gọi hàm updateHint giống Cách 2 -->
+    <input type="text" id="phut_1"  oninput="updateHint(this, 'hint_1')">
+    <small id="hint_1" style="color: #666;"></small>
+</div>
+
+    <button class="btn-calc" onclick="tinhCach1()">Tính kết quả</button>
+
+    <div id="res1" class="result-area" style="display:none;">
+        <div class="result-item">Kết quả: <span id="ket_qua_1" class="highlight">0</span></div>
+    </div>
+</div>
+<hr>
+<!-- CÁCH TÍNH 2: Dựa trên Tổng Meso & Phút -->
+<div class="container">
+    <h2>Tính theo Tổng Meso & Phút</h2>
+    
+
+    <div class="form-group">
+        <label>Tổng số phút:</label>
+        <input type="text" id="tổng_phút" oninput="convertPhutToGio(this)">
+        <small id="convert_hint" style="color: #666;"></small>
+    </div>
+
+    <div class="form-group">
+        <label>Rate Legion:</label>
+        <input type="text" id="rate_legion_2" oninput="formatCurrency(this)">
+    </div>
+
+    
+
+    <button class="btn-calc" onclick="tinhCach2()">Tính kết quả</button>
+
+    <div id="res2" class="result-area" style="display:none;">
+        <div class="result-item">Số giờ: <span id="hien_thi_gio" class="highlight">0</span></div>
+        <div class="result-item">Meso Legion: <span id="meso_legion" class="highlight">0</span> <small>(nhớ chụp hình đưa vào túi khách)</small></div>
+        <div class="result-item">Nhớ cộng <span id="hien_thi_gio_2" class="highlight">0</span> vào Task</div>
+    </div>
+</div>
+
+<hr>
+
+
+
+<script>
+    // 1. Hàm tự động thêm dấu phẩy khi gõ (Dùng chung)
+    function formatCurrency(input) {
+        let value = input.value.replace(/,/g, '');
+        if (value === "") return;
+        let parts = value.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        input.value = parts.join('.');
+    }
+
+    // 2. Hàm lấy số thuần túy để tính toán (Dùng chung)
+    function getRawNumber(id) {
+        let val = document.getElementById(id).value;
+        return parseFloat(val.replace(/,/g, '')) || 0;
+    }
+
+    // 3. Hàm cập nhật gợi ý số giờ ngay lúc nhập (Dùng chung cho cả 2 cách)
+    function updateHint(input, hintId) {
+        formatCurrency(input); // Format dấu phẩy cho phút
+        const phut = parseFloat(input.value.replace(/,/g, '')) || 0;
+        const gio = phut / 60;
+        document.getElementById(hintId).innerText = phut > 0 ? " tương đương " + gio.toFixed(2) + " giờ" : "";
+    }
+
+    // Xử lý Cách 1
+    function tinhCach1() {
+        const rL = getRawNumber('rate_legion_1');
+        const rW = getRawNumber('rate_wap_1');
+        const phut = getRawNumber('phut_1');
+        
+        const g = phut / 60; 
+        const kq = (rL - rW) * g;
+
+        document.getElementById('res1').style.display = 'block';
+        document.getElementById('ket_qua_1').innerText = kq.toLocaleString('vi-VN');
+    }
+
+    // Xử lý Cách 2
+    function tinhCach2() {
+        const tongPhut = getRawNumber('tổng_phút');
+        const rL = getRawNumber('rate_legion_2');
+
+        const gio = tongPhut / 60;
+        const mesoLegion = rL * gio;
+
+        document.getElementById('res2').style.display = 'block';
+        document.getElementById('hien_thi_gio').innerText = gio.toFixed(2);
+        document.getElementById('meso_legion').innerText = mesoLegion.toLocaleString('vi-VN');
+        document.getElementById('hien_thi_gio_2').innerText = gio.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
